@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "530325402371",
+    "project_id": "pagape-b1324",
+    "storage_bucket": "pagape-b1324.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:530325402371:android:61f96b8c442af8e4636f36",
+        "android_client_info": {
+          "package_name": "com.diegopatino.pagapetodo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "530325402371-o9o4qrq88v8ol7ek2eg1a60nulg9mdem.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATo6ECBjoKuKcxwA-mmkD0YpLoqeYlHMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "530325402371-o9o4qrq88v8ol7ek2eg1a60nulg9mdem.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
