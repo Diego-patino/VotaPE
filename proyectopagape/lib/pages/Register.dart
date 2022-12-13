@@ -26,6 +26,84 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
     animationcontroller3;
     super.dispose();
   }
+
+  DateTime? fechaEmision;
+  Future _fechaEmisionconfirm(BuildContext context) async{
+      final initialDate = DateTime.now().toLocal();
+      final newdate = await showDatePicker(
+         builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.orange, 
+              onPrimary: Colors.white, 
+              onSurface: Colors.black, 
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                primary: Colors.red, 
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+        context: context, 
+        initialDate: fechaEmision?? initialDate, 
+        firstDate: DateTime(DateTime.now().year-20), 
+        lastDate: DateTime(DateTime.now().year+20));
+      if (newdate == null) return ;
+      setState(() {
+        fechaEmision = newdate;
+      });
+    }
+
+     String getFechaEmisionText() {
+    if (fechaEmision==null) {
+      return 'Seleccionar la fecha';
+    } else {
+      return '${fechaEmision!.day}/${fechaEmision!.month}/${fechaEmision!.year}';
+    }
+  }
+
+  DateTime? fechaVencimiento;
+  Future _fechaVencimientoConfirm(BuildContext context) async{
+      final initialDate = DateTime.now().toLocal();
+      final newdate = await showDatePicker(
+         builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.orange, 
+              onPrimary: Colors.white, 
+              onSurface: Colors.black, 
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                primary: Colors.red, 
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+        context: context, 
+        initialDate: fechaVencimiento?? initialDate, 
+        firstDate: DateTime(DateTime.now().year-20), 
+        lastDate: DateTime(DateTime.now().year+20));
+      if (newdate == null) return ;
+      setState(() {
+        fechaVencimiento = newdate;
+      });
+    }
+
+     String getFechaVencimientoText() {
+    if (fechaVencimiento==null) {
+      return 'Seleccionar la fecha';
+    } else {
+      return '${fechaVencimiento!.day}/${fechaVencimiento!.month}/${fechaVencimiento!.year}';
+    }
+  }
   
   Future confirmarDNI() async{
     if (dniPersonas.contains(_dnicontroller.text.trim())) {
@@ -38,7 +116,7 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
             .then((value) { print("${dniModel.dni} adasda");
           this.dniModel = DniModel.fromMap(value.data());
           setState(() {});
-          if (dniModel.fecha_V == _dniFV.text.trim() && dniModel.fecha_E == _dniFE.text.trim()) {
+          if (dniModel.fecha_V == getFechaVencimientoText() && dniModel.fecha_E == getFechaEmisionText()) {
 
             if (dniModel.usuario== false) {
               signUp(_emailcontroller.text, _passwordcontroller.text,);
@@ -136,7 +214,8 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
     userModel.nombre = dniModel.nombre;
     userModel.apellido = dniModel.apellido;
     userModel.dni = _dnicontroller.text;
-    userModel.foto = 'https://media.discordapp.net/attachments/1014916229787570226/1043179407075987536/image.png';
+    userModel.foto = 'https://cdn-icons-png.flaticon.com/512/4647/4647291.png';
+    userModel.direccion = dniModel.direccion;
 
     await firebaseFirestore
         .collection("Usuarios")
@@ -480,6 +559,7 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
                               
                               width: MediaQuery.of(context).size.width*0.9,
                               child: TextFormField(
+                                keyboardType: TextInputType.number,
                                   controller: _dnicontroller,
                                   decoration: InputDecoration(
                                     
@@ -511,26 +591,20 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
                 
                       SizedBox(height: 10,),
                 
-                     Container(
-                     width: MediaQuery.of(context).size.width*0.9,
-                       child: Container(
-                         width: 240,
-                         child: TextFormField(
-                            controller: _dniFE,
-                             decoration: InputDecoration(
-                               prefixIcon: Icon(Icons.date_range_rounded, color: Colors.black54,),
-                               enabledBorder: outlineInputBorder_enabled,
-                               focusedBorder: OutlineInputBorder_focused,
-                               contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 15),
-                               labelStyle: labelstyle1,
-                       
-                             ),
-                             onChanged: (value){
-                       
-                             },
-                           ),
-                       ),
-                     ),
+                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.orange
+                      ),
+                      onPressed: (){
+                        _fechaEmisionconfirm(context);
+                      }, 
+                      child: Container(
+                        width: MediaQuery.of(context).size.width*0.8,
+                        child: Center(
+                          child: Text(
+                            getFechaEmisionText(),
+                            style: TextStyle(fontSize: 15),)),
+                      )),
 
                      SizedBox(height: 10,),
 
@@ -542,79 +616,77 @@ class _RegisterState extends State<Register> with TickerProviderStateMixin {
                           style: GoogleFonts.comfortaa(textStyle: TextStyle(fontSize: 20),) ),
                         ),
                     
-                              SizedBox(height: 10,),
-                    
-                              Container(
-                                      
-                                      width: MediaQuery.of(context).size.width*0.9,
-                                      child: TextFormField(
-                                        controller: _dniFV,
-                                        decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.calendar_month_sharp, color: Colors.black54,),
-                                          enabledBorder: outlineInputBorder_enabled,
-                                          focusedBorder: OutlineInputBorder_focused,
-                                          contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 15),
-                                          labelStyle: labelstyle1,
-                              
-                                        ),
-                                        onChanged: (value){
-                              
-                                        },
-                                      ),
-                                    ),
-                      
-                                const SizedBox(height: 25.0,),
-                                Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                onPressed: cargando? null: () {
-                                  if (_formKey.currentState!.validate()) {
-                                   confirmarDNI();
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                primary: Colors.orange,
-                                padding: const EdgeInsets.symmetric(horizontal: 40),
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                ),
-                                child: cargando? Container(child:CircularProgressIndicator(color: Colors.lightGreen,) , height: 20, width: 20,) 
-                                :const Text(
-                                  "Registrame!",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      letterSpacing: 2.2,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ],
+                            SizedBox(height: 10,),
+
+                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.orange
                           ),
+                          onPressed: (){
+                            _fechaVencimientoConfirm(context);
+                          }, 
+                          child: Container(
+                            width: MediaQuery.of(context).size.width*0.8,
+                            child: Center(
+                              child: Text(
+                                getFechaVencimientoText(),
+                                style: TextStyle(fontSize: 15),)),
+                          )), 
 
 
-                         ],
-                       ),
-                     ),
-                   ),
-    
-                SizedBox(height: 20.0),
-                     /* Padding(
-                      padding:EdgeInsets.only(top: 20),
-                      child: IconButton(
-                        onPressed:() {
-                          ChangeUserFoto();
-                        },
-                        icon: Icon(Icons.person_add, size: 20,),
-                        iconSize: 30,
-                      ), ),*/
-                    
-                              ],
-                ),
+                          const SizedBox(height: 25.0,),
+
+                          Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: cargando? null: () {
+                                if (_formKey.currentState!.validate()) {
+                                  confirmarDNI();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                              primary: Colors.red.shade500,
+                              padding: const EdgeInsets.symmetric(horizontal: 40),
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              ),
+                              child: cargando? Container(child:CircularProgressIndicator(color: Colors.lightGreen,) , height: 20, width: 20,) 
+                              :const Text(
+                                "Registrame!",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    letterSpacing: 2.2,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+
+
+                        ],
+                      ),
+                    ),
+                  ),
+  
+              SizedBox(height: 20.0),
+                    /* Padding(
+                    padding:EdgeInsets.only(top: 20),
+                    child: IconButton(
+                      onPressed:() {
+                        ChangeUserFoto();
+                      },
+                      icon: Icon(Icons.person_add, size: 20,),
+                      iconSize: 30,
+                    ), ),*/
+                  
+                            ],
               ),
             ),
           ),
         ),
+      ),
     );
   }
 

@@ -10,12 +10,14 @@ class home_drawer extends StatefulWidget {
   final String nombre;
   final String foto;
   final String apellido;
+  final String direccion;
   
   home_drawer({
     required this.correo,
     required this.nombre,
     required this.foto,
     required this.apellido,
+    required this.direccion,
   });
 
   @override
@@ -62,13 +64,9 @@ class _home_drawerState extends State<home_drawer> {
                     apellido: widget.apellido,
                     correo: widget.correo,
                     nombre: widget.nombre,
+                    direccion: widget.direccion,
                   ),));
               },
-            ),
-            ListTile(
-              leading: Icon(Icons.mail_lock),
-              title: Text('Votos recientes'),
-              onTap: () {},
             ),
             ListTile(
               leading: Icon(Icons.logout_sharp),

@@ -20,7 +20,8 @@ dependencies:
   google_fonts:
   auto_size_text: ^3.0.0
   fluttertoast: ^8.0.9
-  local_auth: ^2.1.2
+  local_auth: 
+  im_stepper: ^1.0.1+1
   
   firebase_core_platform_interface:
   animations: ^2.0.3
@@ -31,6 +32,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  flutter_launcher_icons:
+
+flutter_icons:
+  android: true
+  image_path: "assets/VotaPe_logo.png"
 flutter:
   uses-material-design: true
   

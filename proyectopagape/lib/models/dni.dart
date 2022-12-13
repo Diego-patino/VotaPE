@@ -5,6 +5,7 @@ class DniModel {
   bool? usuario;
   String? nombre;
   String? apellido;
+  String? direccion;
    
   
 
@@ -14,6 +15,7 @@ class DniModel {
   this.usuario,
   this.nombre,
   this.apellido,
+  this.direccion,
   });
 
 
@@ -25,7 +27,8 @@ class DniModel {
       fecha_V: map['Fecha_V'],
       usuario: map['Usuario'],
       nombre: map['nombre'],
-      apellido: map['apellido']
+      apellido: map['apellido'],
+      direccion: map['direccion']
     );
   }
 
@@ -38,6 +41,7 @@ class DniModel {
       'Usuario': usuario,
       'nombre': nombre,
       'apellido': apellido,
+      'direccion': direccion,
     };
   }
 }

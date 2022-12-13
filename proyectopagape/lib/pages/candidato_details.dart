@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pagapetodo/api/local_auth_api.dart';
 import 'package:pagapetodo/models/eleccion.dart';
+import 'package:http/http.dart' as http;
 
 import '../home.dart';
 import '../widgets/toast.dart';
@@ -19,6 +22,10 @@ class CandidatoDetail extends StatefulWidget{
   final String partido;
   final String promesa;
   final String idEleccion;
+  final String nombreUser;
+  final String apellidoUser;
+  final String correoUser;
+  final String nombreVotacion;
   
     CandidatoDetail({
       required this.idEleccion,
@@ -28,6 +35,10 @@ class CandidatoDetail extends StatefulWidget{
       required this.nombre,
       required this.partido,
       required this.promesa,
+      required this.nombreUser,
+      required this.correoUser,
+      required this.nombreVotacion,
+      required this.apellidoUser,
     });
 
 
@@ -73,12 +84,10 @@ class _CandidatoDetailState extends State<CandidatoDetail> {
       documentReference
         .set({
           "Eleccion": eleccion.nombre,
-          "VotoCandidato": widget.nombre,
-          "VotoPartido": widget.partido,
           "Hora": DateTime.now(),
         })
         
-        .then((value) => votoRealizado())
+        .then((value) => mandarVoto())
         .catchError((error) => print("Voto fallo : $error"));
 
         Navigator.pushAndRemoveUntil<dynamic>(
@@ -90,6 +99,62 @@ class _CandidatoDetailState extends State<CandidatoDetail> {
 
         );
     }
+  }
+  
+  Future mandarVoto() async{
+    
+    mandarCorreo();
+
+    DocumentReference documentReference =
+        FirebaseFirestore.instance
+        .collection("Elecciones")
+        .doc(widget.idEleccion)
+        .collection("Votos")
+        .doc(widget.documentId);
+
+      documentReference
+        .update({
+          "VotosTotales": FieldValue.increment(1),
+        })
+        
+        .then((value) => votoRealizado())
+        .catchError((error) => print("Voto fallo : $error"));
+
+        Navigator.pushAndRemoveUntil<dynamic>(
+            context,
+            MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => home(),
+            ),
+            (route) => false,//if you want to disable back feature set to false
+          );
+
+      
+  }
+  DateTime now = DateTime.now();
+
+  Future mandarCorreo() async{
+    final serviceId = 'service_pbc0hhv';
+    final templateId = 'template_yyu9wxn';
+    final userId = '_8AGWvlduFfkd1Mpw';
+    
+    final url= Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+    final response = await http.post(
+      url,
+      headers: {
+        'origin': 'http://localost',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+      'service_id': serviceId,
+      'template_id': templateId,
+      'user_id': userId,
+      'template_params':{
+        'user_nombre': "${widget.nombreUser} ${widget.apellidoUser}",
+        'user_email': widget.correoUser,
+        'user_votacion': widget.nombreVotacion,
+      }
+      }),
+    );
   }
 
   @override

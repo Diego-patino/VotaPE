@@ -6,11 +6,13 @@ class Perfil extends StatefulWidget {
   final String correo;
   final String nombre;
   final String apellido;
+  final String direccion;
   
   Perfil({
     required this.correo,
     required this.nombre,
     required this.apellido,
+    required this.direccion,
   });
 
   @override
@@ -85,28 +87,6 @@ class _PerfilState extends State<Perfil> {
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: const Text(
-                    'Numero de telefono',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 23),
-                  // ignore: sort_child_properties_last
-                  child: const Text(
-                    '922 445 251',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      left: BorderSide(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 15),
                 Container(
                   padding: const EdgeInsets.only(left: 20),
@@ -141,8 +121,8 @@ class _PerfilState extends State<Perfil> {
                 Container(
                   padding: const EdgeInsets.only(left: 23),
                   // ignore: sort_child_properties_last
-                  child: const Text(
-                    'Av lujan patito sanchez 85',
+                  child: Text(
+                    widget.direccion,
                     style: TextStyle(fontSize: 18),
                   ),
                   decoration: const BoxDecoration(

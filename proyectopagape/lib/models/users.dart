@@ -5,6 +5,7 @@ class UserModel {
   String? correo;
   String? foto;
   String? dni;
+  String? direccion;
    
   
 
@@ -13,7 +14,8 @@ class UserModel {
   this.apellido,
   this.correo, 
   this.foto,
-  this.dni });
+  this.dni,
+  this.direccion });
 
 
   // receiving data from server
@@ -24,7 +26,8 @@ class UserModel {
       apellido: map['apellido'],
       correo: map['correo'],
       foto: map['foto'],
-      dni: map['dni']
+      dni: map['dni'],
+      direccion: map['direccion']
     );
   }
 
@@ -37,6 +40,7 @@ class UserModel {
       'foto': foto,
       'dni': dni,
       'apellido': apellido,
+      'direccion': direccion,
     };
   }
 }

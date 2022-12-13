@@ -56,6 +56,7 @@ class _homeState extends State<home> {
               nombre: Usuario_logeado.nombre ?? "",
               foto: Usuario_logeado.foto ?? "",
               apellido: Usuario_logeado.apellido ?? "",
+              direccion: Usuario_logeado.direccion ?? "",
             )
           : drawer_nologin(),
       body: SingleChildScrollView(
@@ -119,6 +120,9 @@ class _homeState extends State<home> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => candidatos(
+                                                      correoUser: Usuario_logeado.correo ?? "",
+                                                      apellidoUser: Usuario_logeado.apellido ?? "",
+                                                      nombreUser: Usuario_logeado.nombre ?? "",
                                                       documentId: docID,
                                                       nombre: nombre,
                                                     ))),

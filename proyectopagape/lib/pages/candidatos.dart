@@ -8,10 +8,16 @@ import 'package:pagapetodo/pages/perfil.dart';
 class candidatos extends StatefulWidget {
   final String documentId;
   final String nombre;
+  final String nombreUser;
+  final String correoUser;
+  final String apellidoUser;
 
   candidatos({
     required this.documentId,
     required this.nombre,
+    required this.nombreUser,
+    required this.correoUser,
+    required this.apellidoUser,
   });
 
   @override
@@ -162,6 +168,7 @@ class _candidatosState extends State<candidatos> {
                                                       MaterialPageRoute(
                                                         builder: (context) =>
                                                             CandidatoDetail(
+                                                              nombreVotacion: widget.nombre,
                                                           idEleccion: widget.documentId,
                                                           documentId: docID,
                                                           foto: foto,
@@ -170,6 +177,9 @@ class _candidatosState extends State<candidatos> {
                                                           nombre: nombre,
                                                           partido: partido,
                                                           promesa: promesa,
+                                                          correoUser: widget.correoUser,
+                                                          nombreUser: widget.nombreUser,
+                                                          apellidoUser: widget.apellidoUser,
                                                         ),
                                                       ));
                                                 },
