@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pagapetodo/models/users.dart';
@@ -18,9 +19,11 @@ class home extends StatefulWidget {
 
 class _homeState extends State<home> {
   UserModel Usuario_logeado = UserModel();
-
+  
+  Trace customTrace = FirebasePerformance.instance.newTrace('elecciones_call');
   @override
   void initState() {
+  customTrace.start();
     super.initState();
     if (FirebaseAuth.instance.currentUser?.uid != null) {
       final user = FirebaseAuth.instance.currentUser!;
@@ -90,6 +93,8 @@ class _homeState extends State<home> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasData) {
+                    customTrace.incrementMetric("vista_de_elecciones_exitosas", 1);
+                    customTrace.stop();
                     return Container(
                         child: ListView.builder(
                             physics: BouncingScrollPhysics(),
@@ -98,12 +103,13 @@ class _homeState extends State<home> {
                             itemBuilder: (context, index) {
                               DocumentSnapshot documentSnapshot =
                                   snapshot.data!.docs[index];
-      
+
                               final docID = documentSnapshot.id;
                               final fecha = documentSnapshot["Fecha"];
                               final nombre = documentSnapshot["nombre"];
                               final foto = documentSnapshot["foto"];
-      
+                              
+
                               //print(type);
                               return Column(
                                 children: [

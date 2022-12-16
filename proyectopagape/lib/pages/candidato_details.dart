@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pagapetodo/api/local_auth_api.dart';
@@ -53,10 +54,13 @@ class _CandidatoDetailState extends State<CandidatoDetail> {
   EleccionModel eleccion = EleccionModel();
   final User? user = FirebaseAuth.instance.currentUser;
   Set<String> votosRealizados = {};
+  Trace customTrace1 = FirebasePerformance.instance.newTrace('candidatos_details_call');
+  Trace customTrace2 = FirebasePerformance.instance.newTrace('confirmar_voto_call');
+  Trace customTrace3 = FirebasePerformance.instance.newTrace('correo_enviado_call');
 
   @override
   void initState() {
-    
+    customTrace1.start();
     FirebaseFirestore.instance
             .collection("Elecciones")
             .doc(widget.idEleccion)
@@ -67,12 +71,17 @@ class _CandidatoDetailState extends State<CandidatoDetail> {
             
           });});
     super.initState();
-  }
+    int counter = 1;
+    customTrace1.incrementMetric("info_de_candidato_exitosas", counter++ );
+    customTrace1.stop();
+}
 
   Future crearVotoRealizado() async {
 
+    customTrace2.start();
     if (votosRealizados.contains(widget.idEleccion)) {
       votoError();
+      customTrace2.stop();
     } else{
       DocumentReference documentReference =
         FirebaseFirestore.instance
@@ -98,6 +107,8 @@ class _CandidatoDetailState extends State<CandidatoDetail> {
             (route) => false,//if you want to disable back feature set to false
 
         );
+    customTrace2.incrementMetric("votos_realizados_existosos", 1);
+    customTrace2.stop();
     }
   }
   
@@ -133,6 +144,7 @@ class _CandidatoDetailState extends State<CandidatoDetail> {
   DateTime now = DateTime.now();
 
   Future mandarCorreo() async{
+    customTrace3.start();
     final serviceId = 'service_pbc0hhv';
     final templateId = 'template_yyu9wxn';
     final userId = '_8AGWvlduFfkd1Mpw';
@@ -155,6 +167,8 @@ class _CandidatoDetailState extends State<CandidatoDetail> {
       }
       }),
     );
+    customTrace3.incrementMetric("correo_enviado_exitosos", 1);
+    customTrace3.stop();
   }
 
   @override
@@ -189,6 +203,7 @@ class _CandidatoDetailState extends State<CandidatoDetail> {
                   height: 170,
                   decoration: BoxDecoration(
                     image:DecorationImage(
+                      
                       image: NetworkImage('${widget.foto}'),
                       fit: BoxFit.cover,
                     ),
@@ -491,7 +506,6 @@ class _CandidatoDetailState extends State<CandidatoDetail> {
                           ),
                         ),
                         onPressed: () async{
-
                           try {
                             final isAuthenticated = await LocalAuthApi.authenticate();
 

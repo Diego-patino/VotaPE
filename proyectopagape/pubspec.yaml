@@ -27,6 +27,7 @@ dependencies:
   animations: ^2.0.3
 
   http: any
+  firebase_performance: ^0.9.0+7
 
 dev_dependencies:
   flutter_test:

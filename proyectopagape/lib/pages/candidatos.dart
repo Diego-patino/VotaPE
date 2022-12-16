@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pagapetodo/pages/Register.dart';
@@ -25,6 +26,16 @@ class candidatos extends StatefulWidget {
 }
 
 class _candidatosState extends State<candidatos> {
+
+  
+  Trace customTrace = FirebasePerformance.instance.newTrace('candidatos_call');
+  
+  @override
+  void initState() {
+    customTrace.start();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +78,8 @@ class _candidatosState extends State<candidatos> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
+                    customTrace.incrementMetric("vista_de_candidatos_exitosas", 1);
+                    customTrace.stop();
                   return Container(
                       child: ListView.builder(
                           physics: BouncingScrollPhysics(),
